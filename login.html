@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <title>advance.ai</title>
+    <style>
+body {
+    display: relative;
+}
+#login {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+  padding: 52px;
+  background-color: #fff;
+  box-shadow: 0 3px 4px 5px rgba(0,0,0,0.2);
+}
+  
+  h4 {
+    margin: 10px 0 5px 0;
+  }
+
+  p {
+    margin: 5px 0;
+  }
+
+  input {
+    line-height: 40px;
+    border: 1px solid #eaeaea;
+    padding: 0 10px;
+    border-radius: 4px;
+    outline: none;
+    width: 400px;
+    margin: 20px 0;
+
+  }
+
+  .error {
+    font-size: 12px;
+    color: #f00;
+  }
+
+    </style>
+</head>
+<body>
+    <div id="login">
+        <h4>用户名</h4>
+        <input v-model="username" placeholder="请输入手机号">
+        <h4>密码</h4>
+        <input v-model="password" type="password" placeholder="请输入密码" @keyup.enter="onLogin">
+        <el-button size="medium" @click="onLogin">立即登录</el-button> 
+    </div>
+    
+<script src="//code.jquery.com/jquery-1.9.1.min.js"></script>    
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+    var login = new Vue({
+        el: '#login',
+        data: {
+            username: '',
+            password: ''
+        },
+        methods: {
+            //登陆检查
+            onLogin(){
+                var  username = this.username
+                var  password = this.password
+                //检查手机号和密码输入是否正确
+                if(username == '' || password == '') {
+                    this.$message.error('手机号或密码为空！')
+                }else if(!/^(\+86)?1[356789]\d{9}$/.test(username)) {
+                    this.$message.error('手机号码输入错误')
+                }else {
+                    //当手机号输入正确时，向后台发送数据
+                    $.ajax({
+                        type: 'POST',
+                        url: 'https://easy-mock.com/mock/5b4dbeb07e597b7eabfb578a/login/',
+                        data: {
+                            username: username,
+                            password: password
+                        },
+                        dataType: 'json',
+                        success: (data)=>{
+                            this.$message(data.msg)
+                        },
+                        error: ()=>{
+                            this.$message.error('登陆失败')
+                        }
+
+
+                    })
+                }
+            } 
+        }
+    })
+</script>
+</body>
+</html>
